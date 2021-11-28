@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/css/global.css" />
+    <link rel="stylesheet" href="/css/navbar.css" />
+    <link rel="stylesheet" href="/css/footer.css" />
+    <link rel="stylesheet" href="/css/edit-expense-list.css" />
+    <title><%= title %></title>
+  </head>
+  <body>
+    <main>
+      <nav class="navbar">
+        <div class="navbar__container">
+          <a href="/expense/list" class="page-link">Listar</a>
+          <a href="" class="page-link">Sobre</a>
+        </div>
+      </nav>
+      <div class="content">
+        <section>
+         <form action="/expense/edit-expense-list/<%= expenseList.id %>" method="POST">
+           <label for="title">Title : </label>
+           <input type="text" name="title" value="<%= expenseList.title %>">
+           <button type="submit" name="submit"> Save </button>
+           <button class="reset-btn" type="reset"
+           onclick="resetTitle('<%= expenseList.title %>')" name="cancel">
+           Reset
+          </button>
+         </form>
+        </section>
+      </div>
+      <footer class="footer">
+        <div class="footer__container">
+          <h1><%= title %> &copy 2021</h1>
+        </div>
+      </footer>
+      <script>
+        const resetBtn = document.querySelector('.reset-btn');
+        const inputTitle = document.querySelector('input[name="title"');
+        function resetTitle(title){
+          inputTitle.value = title;
+        }
+      </script>
+    </main>
+  </body>
+</html>

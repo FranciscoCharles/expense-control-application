@@ -1,11 +1,18 @@
 'use strict';
-const Expense = require('../../models/Expense');
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    const {id_expense_list} = Expense.definition(Sequelize.DataTypes);
-    return await queryInterface.addColumn(Expense.name, 'id_expense_list', id_expense_list);
+    return await queryInterface.addColumn('Expense', 'id_expense_list',
+      {
+        type: Sequelize.DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'ExpenseList',
+          key: 'id'
+        },
+        onDelete: 'CASCADE',
+      });
   },
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.removeColumn(Expense.name, 'id_expense_list');
+    await queryInterface.removeColumn('Expense', 'id_expense_list');
   }
 }
