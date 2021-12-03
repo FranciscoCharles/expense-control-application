@@ -36,7 +36,7 @@
                 class="reset-btn"
                 type="reset"
                 onclick="resetTitle('<%= expenseList.title %>')"
-                name="cancel"
+                name="reset"
               >
                 Reset
               </button>
@@ -46,11 +46,17 @@
             <button class="btn-add-expense"></button>
           </div>
           <div class="expenses-container">
-            <% for( let expense of expenseChilds) {%>
+            <% expenseChilds.forEach((expense,index)=> {%>
               <div>
-               <%= expense.title %>
+               expense <%= index+1 %>
+               <form action="">
+                 <label for="">Title</label>
+                 <input type="text" value="<%= expense.title %>">
+                 <label for="">Value</label>
+                 <input type="text" value="<%= expense.value %>">
+               </form>
               </div>
-              <% } %>
+              <% }); %>
           </div>
           <div class="expense-pagination">
             <div class="pagination-btn--prev">
