@@ -23,3 +23,6 @@ node -e console.log(require('crypto').randomBytes(48).toString('hex'))
 node -e console.log(require('bcryptjs').genSaltSync(12))
 
 node -e console.log(require('crypto').randomBytes(64).toString('hex'))
+
+
+npm i react-router styled-components react-icons
