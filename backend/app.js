@@ -25,7 +25,7 @@ app.use(session({
 }));
 app.use(cookieParser());
 app.use(cors({
-  origin: "*",
+  origin: "http://localhost:8080",
   methods:['GET','PUT','POST','DELETE']
 }));
 /*app.use((req, res, next) => {
@@ -45,15 +45,18 @@ app.use(function (req, res, next) {
 });
 
 // error handler
-/*app.use(function (err, req, res, next) {
-  /* // set locals, only providing error in development
+app.use(function (err, req, res, next) {
+   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
 
   // render the error page
-  res.status(err.status || 500);
-  res.render('error'); */
-/*console.log('\n\n\n',"ocorreu um error","\n\n\n\n")
+  //res.status(err.status || 500);
+  if(error) return res.status(err.status || 500).json({ message: error.message });
+  //res.render('error');
+});
+/*
+console.log('\n\n\n',"ocorreu um error","\n\n\n\n")
 switch (true) {
   case typeof err === 'string':
     // custom application error
@@ -68,8 +71,8 @@ switch (true) {
     return res.status(401).json({ message: 'Unauthorized' });
   default:
     return res.status(500).json({ message: err.message });
-}*-/
+}
 next();
-});*/
-
+});
+*/
 module.exports = app;

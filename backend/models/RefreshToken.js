@@ -19,7 +19,7 @@ module.exports = {
         type: DataTypes.STRING,
         allowNull: false,
 				get(){
-					return (new Date(this.getDataValue('expires'))).getTime();
+					return (new Date(+this.getDataValue('expires'))).getTime();
 				}
 			},
 			/* virtual functions */

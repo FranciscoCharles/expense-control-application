@@ -1,31 +1,39 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
+const url = require('url');
 const db = require('../models');
 const router = express.Router();
-const { authenticate, refreshToken,authorization } = require('../middleware');
-
-router.post('/token', async function (req, res) {
-  let message = 'usuario não autorizado';
+const { authenticate, refreshToken, authorization } = require('../middleware');
+async function verifyRefreshToken(req, res) {
   try {
-    const jwtToken = req.body?.user_data?.jwtToken;
+    const token = req.body?.refreshToken;
+    if (token) {
+      const newUserData = await refreshToken(token);
+      return res.status(200).json(newUserData);
+    }
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+  return res.status(500).json({ message: 'no refresh token' });
+}
+router.post('/token', async function (req, res) {
+  try {
+    const jwtToken = req.headers.authorization.split(' ')[1];
     if (jwtToken) {
       jwt.verify(jwtToken, process.env.TOKEN_SECRET);
-      return res.status(200).json(req.body.user_data);
+      return res.status(200).json(req.body);
     }
   } catch (error) {
     if (error instanceof jwt.TokenExpiredError) {
-      console.log('expirado')
-      const _refreshToken = req.body?.user_data?.refreshToken;
-      if (_refreshToken) {
-        const newData = await refreshToken(_refreshToken);
-        return res.status(200).json(newData);
-      }
-    } else {
-      message = error.message;
+      console.log('jwt expirado');
+
+      return await verifyRefreshToken(req, res);
     }
+    return res.status(500).json({ message: error.message });
   }
-  res.status(500).json({ message });
+  return res.status(500).json({ message: 'no token acess' });
+
 });
 router.post('/register', async function (req, res) {
   try {
@@ -57,15 +65,20 @@ router.post('/register', async function (req, res) {
 
 router.post('/login', async function (req, res) {
 
+  console.log(req.body)
   const { email, password } = req.body;
   // Validate user input
   if (!(email && password)) {
     return res.status(400).json({ message: 'All input is required' });
   }
-  // Validate if user exist in our database
-  const data = await authenticate(email, password);
+  try {
+    // Validate if user exist in our database
+    data = await authenticate(email, password);
+    return res.status(200).json(data);
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
   //  res.setHeader('Authorization', 'Bearer '+ data.token); 
-  return res.status(200).json(data);
 });
 
 router.get('/logout', async function (req, res) {

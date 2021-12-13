@@ -49,7 +49,7 @@ async function refreshToken(token) {
   const { user } = refreshToken;
   // generate new jwt
   const jwtToken = generateJwtToken(user);
-  refreshToken.expires = dayjs().add(5, 'm').valueOf().toString()
+  refreshToken.expires = dayjs().add(10, 'd').valueOf().toString()
   await refreshToken.save();
   // return basic details and tokens
   return {
@@ -79,7 +79,7 @@ async function getRefreshToken(token) {
 
 function generateJwtToken(user) {
   // create a jwt token containing the user id that expires in 15 minutes
-  return jwt.sign({ id: user.id, name: user.first_name }, process.env.TOKEN_SECRET, { expiresIn: '5min' });
+  return jwt.sign({ id: user.id, name: user.first_name }, process.env.TOKEN_SECRET, { expiresIn: '5d' });
 }
 
 async function generateRefreshToken(user) {
@@ -88,7 +88,7 @@ async function generateRefreshToken(user) {
   return await db.RefreshToken.create({
     user: user.id,
     token: randomTokenString(),
-    expires: dayjs().add(15, 'm').valueOf().toString(),
+    expires: dayjs().add(10, 'd').valueOf().toString(),
   });
 }
 
